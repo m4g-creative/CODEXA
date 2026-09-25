@@ -1,12 +1,118 @@
 /* =====================================================
    CODEXA — JAVASCRIPT PART 1/3
-   ELEMENTS + TOAST + CONFIRM + PREVIEW + SAVE + CLEAR
+   SUPABASE + AUTH + COMPILER CORE
    ===================================================== */
 
 
 /* =====================================================
-   ELEMENTS
+   SUPABASE CONFIG
    ===================================================== */
+
+const SUPABASE_URL =
+    "https://idfqgujrsrurlajyultw.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_tACoZGEalQ9xoMoGGcyUFA_hOshBQxA";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =====================================================
+   DOM ELEMENTS
+   ===================================================== */
+
+const authPage =
+    document.getElementById("authPage");
+
+const appShell =
+    document.getElementById("appShell");
+
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginEmail =
+    document.getElementById("loginEmail");
+
+const loginPassword =
+    document.getElementById("loginPassword");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
+const showSignupBtn =
+    document.getElementById("showSignupBtn");
+
+
+const signupForm =
+    document.getElementById("signupForm");
+
+const signupEmail =
+    document.getElementById("signupEmail");
+
+const signupPassword =
+    document.getElementById("signupPassword");
+
+const signupPasswordConfirm =
+    document.getElementById("signupPasswordConfirm");
+
+const signupBtn =
+    document.getElementById("signupBtn");
+
+const signupMessage =
+    document.getElementById("signupMessage");
+
+const showLoginBtn =
+    document.getElementById("showLoginBtn");
+
+
+const savedProjectsBtn =
+    document.getElementById("savedProjectsBtn");
+
+const saveBtn =
+    document.getElementById("saveBtn");
+
+const downloadBtn =
+    document.getElementById("downloadBtn");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+const runBtn =
+    document.getElementById("runBtn");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+
+const compilerPage =
+    document.getElementById("compilerPage");
+
+const projectNameInput =
+    document.getElementById("projectNameInput");
+
+const openedProjectBar =
+    document.getElementById("openedProjectBar");
+
+const openedProjectText =
+    document.getElementById("openedProjectText");
+
+const backToSavedProjectsFromCompiler =
+    document.getElementById(
+        "backToSavedProjectsFromCompiler"
+    );
+
+
+const preview =
+    document.getElementById("preview");
 
 const htmlCode =
     document.getElementById("htmlCode");
@@ -17,143 +123,830 @@ const cssCode =
 const jsCode =
     document.getElementById("jsCode");
 
-const preview =
-    document.getElementById("preview");
-
-const runBtn =
-    document.getElementById("runBtn");
-
-const clearBtn =
-    document.getElementById("clearBtn");
-
-const saveBtn =
-    document.getElementById("saveBtn");
-
-const downloadBtn =
-    document.getElementById("downloadBtn");
-
-const fullscreenBtn =
-    document.getElementById("fullscreenBtn");
-
-const savedProjectsBtn =
-    document.getElementById("savedProjectsBtn");
-
-const backToCompilerBtn =
-    document.getElementById("backToCompilerBtn");
-
-const backToSavedProjectsFromCompiler =
-    document.getElementById(
-        "backToSavedProjectsFromCompiler"
-    );
-
-const compilerPage =
-    document.getElementById("compilerPage");
 
 const savedProjectsPage =
-    document.getElementById("savedProjectsPage");
+    document.getElementById(
+        "savedProjectsPage"
+    );
+
+const backToCompilerBtn =
+    document.getElementById(
+        "backToCompilerBtn"
+    );
 
 const projectsGrid =
     document.getElementById("projectsGrid");
 
+
+const fullscreenBtn =
+    document.getElementById("fullscreenBtn");
+
 const toastContainer =
     document.getElementById("toastContainer");
 
-const projectNameInput =
-    document.getElementById(
-        "projectNameInput"
-    );
-
-const openedProjectBar =
-    document.getElementById(
-        "openedProjectBar"
-    );
-
-const openedProjectText =
-    document.getElementById(
-        "openedProjectText"
-    );
-
-
-/* =====================================================
-   CONFIRM ELEMENTS
-   ===================================================== */
 
 const confirmOverlay =
-    document.getElementById(
-        "confirmOverlay"
-    );
+    document.getElementById("confirmOverlay");
 
 const confirmTitle =
-    document.getElementById(
-        "confirmTitle"
-    );
+    document.getElementById("confirmTitle");
 
 const confirmMessage =
-    document.getElementById(
-        "confirmMessage"
-    );
+    document.getElementById("confirmMessage");
 
 const confirmCancel =
-    document.getElementById(
-        "confirmCancel"
-    );
+    document.getElementById("confirmCancel");
 
 const confirmAction =
-    document.getElementById(
-        "confirmAction"
+    document.getElementById("confirmAction");
+
+
+/* =====================================================
+   GLOBAL STATE
+   ===================================================== */
+
+let currentUser = null;
+let currentSession = null;
+let activeProjectId = null;
+let confirmCallback = null;
+
+
+/* =====================================================
+   AUTH / APP VISIBILITY
+   ===================================================== */
+
+function showAuthPage() {
+
+    authPage.classList.add("active");
+
+    appShell.classList.remove("active");
+
+    showLoginForm();
+
+}
+
+
+function showApp() {
+
+    authPage.classList.remove("active");
+
+    appShell.classList.add("active");
+
+    showCompilerPage();
+
+}
+
+
+/* =====================================================
+   AUTH FORM SWITCHING
+   ===================================================== */
+
+function showLoginForm() {
+
+    loginForm.classList.remove(
+        "hidden-auth"
+    );
+
+    signupForm.classList.add(
+        "hidden-auth"
+    );
+
+    clearAuthMessages();
+
+}
+
+
+function showSignupForm() {
+
+    loginForm.classList.add(
+        "hidden-auth"
+    );
+
+    signupForm.classList.remove(
+        "hidden-auth"
+    );
+
+    clearAuthMessages();
+
+}
+
+
+function clearAuthMessages() {
+
+    loginMessage.textContent = "";
+    signupMessage.textContent = "";
+
+    loginMessage.className =
+        "auth-message";
+
+    signupMessage.className =
+        "auth-message";
+
+}
+
+
+/* =====================================================
+   AUTH MESSAGES
+   ===================================================== */
+
+function showLoginMessage(
+    message,
+    type = "error"
+) {
+
+    loginMessage.textContent =
+        message;
+
+    loginMessage.className =
+        "auth-message " + type;
+
+}
+
+
+function showSignupMessage(
+    message,
+    type = "error"
+) {
+
+    signupMessage.textContent =
+        message;
+
+    signupMessage.className =
+        "auth-message " + type;
+
+}
+
+
+/* =====================================================
+   BUTTON LOADING
+   ===================================================== */
+
+function setButtonLoading(
+    button,
+    loading,
+    normalText
+) {
+
+    if (!button) return;
+
+    button.disabled =
+        loading;
+
+    button.textContent =
+        loading
+            ? "Please wait..."
+            : normalText;
+
+}
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+async function loginUser() {
+
+    const email =
+        loginEmail.value.trim();
+
+    const password =
+        loginPassword.value;
+
+
+    if (!email || !password) {
+
+        showLoginMessage(
+            "Please enter your email and password."
+        );
+
+        return;
+    }
+
+
+    showLoginMessage(
+        "Logging in...",
+        "loading"
     );
 
 
+    setButtonLoading(
+        loginBtn,
+        true,
+        "Login"
+    );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signInWithPassword({
+
+                email,
+                password
+
+            });
+
+
+        if (error) {
+
+            showLoginMessage(
+                error.message
+            );
+
+            return;
+        }
+
+
+        if (!data.session) {
+
+            showLoginMessage(
+                "Please confirm your email before logging in."
+            );
+
+            return;
+        }
+
+
+        currentSession =
+            data.session;
+
+        currentUser =
+            data.user;
+
+
+        loginPassword.value = "";
+
+
+        showApp();
+
+
+        showToast(
+            "Welcome Back",
+            "You are now logged into Codexa.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Login Error:",
+            error
+        );
+
+        showLoginMessage(
+            "Something went wrong. Please try again."
+        );
+
+    }
+
+    finally {
+
+        setButtonLoading(
+            loginBtn,
+            false,
+            "Login"
+        );
+
+    }
+
+}
+
+
 /* =====================================================
-   STORAGE
+   SIGNUP
    ===================================================== */
 
-const STORAGE_KEY =
-    "codexaProjects";
+async function signupUser() {
 
+    const email =
+        signupEmail.value.trim();
 
-/* =====================================================
-   HOME CODE
-   ===================================================== */
+    const password =
+        signupPassword.value;
 
-const homeCode = {
+    const confirmPassword =
+        signupPasswordConfirm.value;
 
-    html:
-        htmlCode.value,
-
-    css:
-        cssCode.value,
-
-    js:
-        jsCode.value
-
-};
-
-
-let activeProjectId =
-    null;
-
-let previewTimer =
-    null;
-
-let confirmCallback =
-    null;
-
-
-/* =====================================================
-   BUTTON BLUR
-   ===================================================== */
-
-function blurButton(
-    button
-) {
 
     if (
-        button &&
-        typeof button.blur === "function"
+        !email ||
+        !password ||
+        !confirmPassword
     ) {
 
-        button.blur();
+        showSignupMessage(
+            "Please fill in all fields."
+        );
+
+        return;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        showSignupMessage(
+            "Passwords do not match."
+        );
+
+        return;
+    }
+
+
+    if (password.length < 6) {
+
+        showSignupMessage(
+            "Password must be at least 6 characters."
+        );
+
+        return;
+    }
+
+
+    showSignupMessage(
+        "Creating your account...",
+        "loading"
+    );
+
+
+    setButtonLoading(
+        signupBtn,
+        true,
+        "Create Account"
+    );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.signUp({
+
+                email,
+                password
+
+            });
+
+
+        if (error) {
+
+            showSignupMessage(
+                error.message
+            );
+
+            return;
+        }
+
+
+        if (!data.session) {
+
+            showSignupMessage(
+                "Account created. Check your email to confirm your account.",
+                "success"
+            );
+
+            signupPassword.value = "";
+            signupPasswordConfirm.value = "";
+
+            return;
+        }
+
+
+        currentSession =
+            data.session;
+
+        currentUser =
+            data.user;
+
+
+        showApp();
+
+
+        showToast(
+            "Account Created",
+            "Welcome to Codexa.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Signup Error:",
+            error
+        );
+
+        showSignupMessage(
+            "Something went wrong. Please try again."
+        );
+
+    }
+
+    finally {
+
+        setButtonLoading(
+            signupBtn,
+            false,
+            "Create Account"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
+async function logoutUser() {
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            showToast(
+                "Logout Failed",
+                error.message,
+                "error"
+            );
+
+            return;
+        }
+
+
+        currentUser = null;
+        currentSession = null;
+        activeProjectId = null;
+
+
+        showAuthPage();
+
+
+        showToast(
+            "Logged Out",
+            "You have been logged out of Codexa.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Logout Error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+   ===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+    (event, session) => {
+
+        currentSession =
+            session || null;
+
+        currentUser =
+            session
+                ? session.user
+                : null;
+
+
+        if (session) {
+
+            showApp();
+
+        }
+
+        else {
+
+            showAuthPage();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   COMPILER PAGE
+   ===================================================== */
+
+function showCompilerPage() {
+
+    compilerPage.style.display =
+        "block";
+
+    savedProjectsPage.style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   PREVIEW
+   ===================================================== */
+
+function buildPreview() {
+
+    if (
+        !preview ||
+        !htmlCode ||
+        !cssCode ||
+        !jsCode
+    ) {
+        return;
+    }
+
+
+    const html =
+        htmlCode.value;
+
+    const css =
+        cssCode.value;
+
+    const js =
+        jsCode.value;
+
+
+    const documentContent = `
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<style>
+${css}
+</style>
+
+</head>
+
+<body>
+
+${html}
+
+<script>
+${js}
+<\/script>
+
+</body>
+</html>
+`;
+
+
+    preview.srcdoc =
+        documentContent;
+
+}
+
+
+/* =====================================================
+   RUN
+   ===================================================== */
+
+function runProject() {
+
+    buildPreview();
+
+
+    showToast(
+        "Project Running",
+        "Your code has been loaded into the live preview.",
+        "success"
+    );
+
+}
+
+
+/* =====================================================
+   LIVE PREVIEW
+   ===================================================== */
+
+htmlCode.addEventListener(
+    "input",
+    buildPreview
+);
+
+cssCode.addEventListener(
+    "input",
+    buildPreview
+);
+
+jsCode.addEventListener(
+    "input",
+    buildPreview
+);
+
+
+/* =====================================================
+   SAVE PROJECT
+   ===================================================== */
+
+async function saveCurrentProject() {
+
+    if (!currentUser) {
+
+        showToast(
+            "Login Required",
+            "Please login before saving a project.",
+            "error"
+        );
+
+        showAuthPage();
+
+        return;
+    }
+
+
+    const projectName =
+        projectNameInput.value.trim();
+
+
+    if (!projectName) {
+
+        showToast(
+            "Project Name Required",
+            "Please enter a project name first.",
+            "error"
+        );
+
+        projectNameInput.focus();
+
+        return;
+    }
+
+
+    const projectData = {
+
+        user_id:
+            currentUser.id,
+
+        project_name:
+            projectName,
+
+        html_code:
+            htmlCode.value,
+
+        css_code:
+            cssCode.value,
+
+        js_code:
+            jsCode.value
+
+    };
+
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+
+    try {
+
+        if (activeProjectId) {
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("projects")
+                    .update({
+
+                        project_name:
+                            projectName,
+
+                        html_code:
+                            htmlCode.value,
+
+                        css_code:
+                            cssCode.value,
+
+                        js_code:
+                            jsCode.value,
+
+                        updated_at:
+                            new Date().toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        activeProjectId
+                    )
+                    .eq(
+                        "user_id",
+                        currentUser.id
+                    );
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            openedProjectBar.style.display =
+                "flex";
+
+            openedProjectText.textContent =
+                "Saved project is currently open: " +
+                projectName;
+
+
+            showToast(
+                "Project Updated",
+                `"${projectName}" has been updated.`,
+                "success"
+            );
+
+        }
+
+        else {
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("projects")
+                    .insert([
+                        projectData
+                    ])
+                    .select()
+                    .single();
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            activeProjectId =
+                data?.id || null;
+
+
+            openedProjectBar.style.display =
+                "flex";
+
+            openedProjectText.textContent =
+                "Saved project is currently open: " +
+                projectName;
+
+
+            showToast(
+                "Project Saved",
+                `"${projectName}" has been saved to your Codexa cloud.`,
+                "success"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Save Project Error:",
+            error
+        );
+
+
+        showToast(
+            "Save Failed",
+            error.message ||
+            "Unable to save the project.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Project";
 
     }
 
@@ -167,58 +960,78 @@ function blurButton(
 function showToast(
     title,
     message,
-    icon = "✓",
-    duration = 2200
+    type = "success"
 ) {
 
-    if (!toastContainer) {
-        return;
-    }
+    if (!toastContainer) return;
 
 
     const toast =
         document.createElement("div");
 
-
     toast.className =
-        "toast";
+        "toast " + type;
 
 
-    toast.innerHTML = `
+    const icon =
+        document.createElement("div");
 
-        <div class="toast-icon">
-            ${icon}
-        </div>
+    icon.className =
+        "toast-icon";
 
-        <div class="toast-content">
-
-            <div class="toast-title"></div>
-
-            <div class="toast-message"></div>
-
-        </div>
-
-        <button
-            class="toast-close"
-            type="button"
-            aria-label="Close"
-        >
-            ×
-        </button>
-
-    `;
+    icon.textContent =
+        type === "error"
+            ? "!"
+            : "✓";
 
 
-    toast.querySelector(
-        ".toast-title"
-    ).textContent =
+    const content =
+        document.createElement("div");
+
+    content.className =
+        "toast-content";
+
+
+    const toastTitle =
+        document.createElement("div");
+
+    toastTitle.className =
+        "toast-title";
+
+    toastTitle.textContent =
         title;
 
 
-    toast.querySelector(
-        ".toast-message"
-    ).textContent =
+    const toastMessage =
+        document.createElement("div");
+
+    toastMessage.className =
+        "toast-message";
+
+    toastMessage.textContent =
         message;
+
+
+    const close =
+        document.createElement("button");
+
+    close.type = "button";
+    close.className = "toast-close";
+    close.textContent = "×";
+
+
+    content.appendChild(
+        toastTitle
+    );
+
+    content.appendChild(
+        toastMessage
+    );
+
+
+    toast.appendChild(icon);
+    toast.appendChild(content);
+    toast.appendChild(close);
 
 
     toastContainer.appendChild(
@@ -226,161 +1039,94 @@ function showToast(
     );
 
 
-    const closeToast =
-        function () {
-
-            if (
-                !toast.isConnected
-            ) {
-                return;
-            }
-
-
-            toast.classList.add(
-                "removing"
-            );
-
-
-            setTimeout(
-                function () {
-
-                    if (
-                        toast.isConnected
-                    ) {
-
-                        toast.remove();
-
-                    }
-
-                },
-                250
-            );
-
-        };
-
-
-    toast.querySelector(
-        ".toast-close"
-    ).addEventListener(
+    close.addEventListener(
         "click",
-        function () {
-
-            blurButton(
-                this
-            );
-
-            closeToast();
-
-        }
+        () => removeToast(toast)
     );
 
 
-    if (
-        duration > 0
-    ) {
-
-        setTimeout(
-            closeToast,
-            duration
-        );
-
-    }
+    setTimeout(
+        () => removeToast(toast),
+        4500
+    );
 
 }
 
 
+function removeToast(toast) {
+
+    if (!toast) return;
+
+
+    toast.classList.add(
+        "toast-hide"
+    );
+
+
+    setTimeout(
+        () => {
+
+            if (toast.parentNode) {
+
+                toast.parentNode.removeChild(
+                    toast
+                );
+
+            }
+
+        },
+        300
+    );
+
+    }
 /* =====================================================
-   IN-PAGE CONFIRMATION
+   CODEXA — JAVASCRIPT PART 2/3
+   CONFIRM + SAVED PROJECTS + CLEAR
+   ===================================================== */
+
+
+/* =====================================================
+   CONFIRMATION
    ===================================================== */
 
 function showConfirm(
     title,
     message,
-    actionText,
     callback
 ) {
-
-    if (
-        !confirmOverlay
-    ) {
-        return;
-    }
-
 
     confirmTitle.textContent =
         title;
 
-
     confirmMessage.textContent =
         message;
 
-
-    confirmAction.textContent =
-        actionText || "Continue";
-
-
     confirmCallback =
-        typeof callback === "function"
-            ? callback
-            : null;
+        callback;
 
 
     confirmOverlay.classList.add(
         "active"
     );
 
-
     confirmOverlay.setAttribute(
         "aria-hidden",
         "false"
     );
 
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    setTimeout(
-        function () {
-
-            if (
-                confirmCancel
-            ) {
-
-                confirmCancel.focus();
-
-            }
-
-        },
-        0
-    );
-
 }
 
 
-function closeConfirm() {
-
-    if (
-        !confirmOverlay
-    ) {
-        return;
-    }
-
+function hideConfirm() {
 
     confirmOverlay.classList.remove(
         "active"
     );
 
-
     confirmOverlay.setAttribute(
         "aria-hidden",
         "true"
     );
-
-
-    document.body.style.overflow =
-        "";
-
 
     confirmCallback =
         null;
@@ -390,56 +1136,31 @@ function closeConfirm() {
 
 confirmCancel.addEventListener(
     "click",
-    function () {
-
-        blurButton(
-            this
-        );
-
-        closeConfirm();
-
-    }
+    hideConfirm
 );
 
 
 confirmAction.addEventListener(
     "click",
-    function () {
-
-        blurButton(
-            this
-        );
-
-
-        const callback =
-            confirmCallback;
-
-
-        closeConfirm();
-
+    async () => {
 
         if (
-            typeof callback === "function"
+            typeof confirmCallback ===
+            "function"
         ) {
 
-            callback();
+            const callback =
+                confirmCallback;
+
+            hideConfirm();
+
+            await callback();
 
         }
 
-    }
-);
+        else {
 
-
-confirmOverlay.addEventListener(
-    "click",
-    function (event) {
-
-        if (
-            event.target ===
-            confirmOverlay
-        ) {
-
-            closeConfirm();
+            hideConfirm();
 
         }
 
@@ -449,16 +1170,14 @@ confirmOverlay.addEventListener(
 
 document.addEventListener(
     "keydown",
-    function (event) {
+    (event) => {
 
         if (
             event.key === "Escape" &&
-            confirmOverlay.classList.contains(
-                "active"
-            )
+            confirmOverlay.classList.contains("active")
         ) {
 
-            closeConfirm();
+            hideConfirm();
 
         }
 
@@ -467,663 +1186,127 @@ document.addEventListener(
 
 
 /* =====================================================
-   STORAGE FUNCTIONS
+   SHOW SAVED PROJECTS
    ===================================================== */
 
-function getProjects() {
+async function showSavedProjects() {
+
+    if (!currentUser) {
+
+        showToast(
+            "Login Required",
+            "Please login to view your saved projects.",
+            "error"
+        );
+
+        showAuthPage();
+
+        return;
+    }
+
+
+    compilerPage.style.display =
+        "none";
+
+    savedProjectsPage.style.display =
+        "block";
+
+
+    await loadSavedProjects();
+
+}
+
+
+/* =====================================================
+   LOAD SAVED PROJECTS
+   ===================================================== */
+
+async function loadSavedProjects() {
+
+    if (!currentUser) {
+
+        projectsGrid.innerHTML =
+            "";
+
+        return;
+    }
+
+
+    projectsGrid.innerHTML = `
+        <div class="projects-loading">
+            Loading your projects...
+        </div>
+    `;
+
 
     try {
 
-        const data =
-            localStorage.getItem(
-                STORAGE_KEY
-            );
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("projects")
+                .select(
+                    "id, user_id, project_name, html_code, css_code, js_code, created_at, updated_at"
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
+                )
+                .order(
+                    "updated_at",
+                    {
+                        ascending: false
+                    }
+                );
 
 
-        if (!data) {
-
-            return [];
-
+        if (error) {
+            throw error;
         }
 
 
-        const projects =
-            JSON.parse(data);
+        renderSavedProjects(
+            data || []
+        );
 
+    }
 
-        return Array.isArray(
-            projects
-        )
-            ? projects
-            : [];
-
-
-    } catch (error) {
+    catch (error) {
 
         console.error(
-            "Storage read error:",
+            "Load Projects Error:",
             error
         );
 
 
-        return [];
+        projectsGrid.innerHTML = `
+            <div class="projects-empty">
+
+                <h3>
+                    Unable to load projects
+                </h3>
+
+                <p>
+                    ${escapeHtml(
+                        error.message ||
+                        "Something went wrong."
+                    )}
+                </p>
+
+            </div>
+        `;
 
-    }
-
-}
-
-
-function writeProjects(
-    projects
-) {
-
-    try {
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(projects)
-        );
-
-
-        return true;
-
-
-    } catch (error) {
-
-        console.error(
-            "Storage write error:",
-            error
-        );
-
-
-        return false;
-
-    }
-
-}
-
-
-/* =====================================================
-   PREVIEW
-   ===================================================== */
-
-function buildPreview() {
-
-    const safeJavaScript =
-        jsCode.value.replace(
-            /<\/script/gi,
-            "<\\/script"
-        );
-
-
-    const page =
-`<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<style>
-
-${cssCode.value}
-
-</style>
-
-</head>
-
-<body>
-
-${htmlCode.value}
-
-<script>
-
-try {
-
-${safeJavaScript}
-
-} catch (error) {
-
-document.body.insertAdjacentHTML(
-    "beforeend",
-    '<pre style="color:red;padding:15px;font-family:monospace;white-space:pre-wrap;">' +
-    error.message +
-    '</pre>'
-);
-
-}
-
-<\/script>
-
-</body>
-
-</html>`;
-
-
-    preview.srcdoc =
-        page;
-
-}
-
-
-/* =====================================================
-   RUN
-   ===================================================== */
-
-runBtn.addEventListener(
-    "click",
-    function () {
-
-        blurButton(
-            this
-        );
-
-        buildPreview();
-
-    }
-);
-
-
-/* =====================================================
-   LIVE PREVIEW
-   ===================================================== */
-
-function schedulePreview() {
-
-    clearTimeout(
-        previewTimer
-    );
-
-
-    previewTimer =
-        setTimeout(
-            function () {
-
-                buildPreview();
-
-            },
-            350
-        );
-
-}
-
-
-htmlCode.addEventListener(
-    "input",
-    schedulePreview
-);
-
-
-cssCode.addEventListener(
-    "input",
-    schedulePreview
-);
-
-
-jsCode.addEventListener(
-    "input",
-    schedulePreview
-);
-
-
-/* =====================================================
-   SAVE PROJECT
-   ===================================================== */
-
-saveBtn.addEventListener(
-    "click",
-    function () {
-
-        blurButton(
-            this
-        );
-
-
-        const projectName =
-            projectNameInput.value.trim();
-
-
-        saveCurrentProject(
-            projectName
-        );
-
-    }
-);
-
-
-/* =====================================================
-   SAVE CURRENT PROJECT
-   ===================================================== */
-
-function saveCurrentProject(
-    projectName
-) {
-
-    const cleanName =
-        String(
-            projectName || ""
-        ).trim();
-
-
-    if (!cleanName) {
 
         showToast(
-            "Name Required",
-            "Please enter a project name first.",
-            "!",
-            2500
-        );
-
-        projectNameInput.focus();
-
-        return;
-
-    }
-
-
-    const projects =
-        getProjects();
-
-
-    const duplicate =
-        projects.some(
-            function (project) {
-
-                return (
-                    String(
-                        project.name || ""
-                    )
-                    .trim()
-                    .toLowerCase() ===
-                    cleanName.toLowerCase()
-                );
-
-            }
-        );
-
-
-    if (duplicate) {
-
-        showConfirm(
-            "Duplicate Project",
-            `"${cleanName}" already exists. Do you want to save another project with the same name?`,
-            "Save Anyway",
-            function () {
-
-                createSavedProject(
-                    cleanName
-                );
-
-            }
-        );
-
-        return;
-
-    }
-
-
-    createSavedProject(
-        cleanName
-    );
-
-}
-
-
-/* =====================================================
-   CREATE SAVED PROJECT
-   ===================================================== */
-
-function createSavedProject(
-    projectName
-) {
-
-    const projects =
-        getProjects();
-
-
-    const project = {
-
-        id:
-            Date.now().toString() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .slice(2, 8),
-
-        name:
-            projectName,
-
-        html:
-            htmlCode.value,
-
-        css:
-            cssCode.value,
-
-        js:
-            jsCode.value,
-
-        savedAt:
-            new Date().toISOString()
-
-    };
-
-
-    projects.unshift(
-        project
-    );
-
-
-    if (
-        !writeProjects(
-            projects
-        )
-    ) {
-
-        showToast(
-            "Save Failed",
-            "The project could not be saved in this browser.",
-            "!",
-            3000
-        );
-
-        return;
-
-    }
-
-
-    activeProjectId =
-        project.id;
-
-
-    projectNameInput.value =
-        projectName;
-
-
-    showOpenedProjectBar(
-        projectName
-    );
-
-
-    showToast(
-        "Project Saved",
-        `"${projectName}" has been saved successfully.`,
-        "✓",
-        2600
-    );
-
-}
-
-
-/* =====================================================
-   CLEAR
-   ===================================================== */
-
-clearBtn.addEventListener(
-    "click",
-    function () {
-
-        blurButton(
-            this
-        );
-
-
-        const hasCode =
-            htmlCode.value.trim() ||
-            cssCode.value.trim() ||
-            jsCode.value.trim();
-
-
-        const hasProjectName =
-            projectNameInput.value.trim();
-
-
-        if (
-            !hasCode &&
-            !hasProjectName
-        ) {
-
-            showToast(
-                "Already Clear",
-                "There is nothing to clear.",
-                "!",
-                2200
-            );
-
-            return;
-
-        }
-
-
-        showConfirm(
-            "Clear Editor",
-            "All HTML, CSS, JavaScript and the current project name will be removed.",
-            "Clear Everything",
-            function () {
-
-                clearEditor();
-
-            }
+            "Load Failed",
+            error.message ||
+            "Unable to load your projects.",
+            "error"
         );
 
     }
-);
-
-
-/* =====================================================
-   CLEAR EDITOR
-   ===================================================== */
-
-function clearEditor() {
-
-    htmlCode.value =
-        "";
-
-    cssCode.value =
-        "";
-
-    jsCode.value =
-        "";
-
-
-    projectNameInput.value =
-        "";
-
-
-    clearTimeout(
-        previewTimer
-    );
-
-
-    preview.srcdoc =
-        "";
-
-
-    activeProjectId =
-        null;
-
-
-    hideOpenedProjectBar();
-
-
-    showToast(
-        "Editor Cleared",
-        "All code has been removed successfully.",
-        "✓",
-        2400
-    );
-
-}
-/* =====================================================
-   CODEXA — JAVASCRIPT PART 2/3
-   SAVED PROJECTS + OPEN + BACK + DELETE
-   FIXED / OPTIMIZED
-   ===================================================== */
-
-
-/* =====================================================
-   SHOW OPENED PROJECT BAR
-   ===================================================== */
-
-function showOpenedProjectBar(projectName) {
-
-    if (!openedProjectBar) {
-        return;
-    }
-
-    openedProjectBar.classList.add("show");
-
-    if (openedProjectText) {
-        openedProjectText.textContent =
-            `"${projectName}" is currently open.`;
-    }
-
-}
-
-
-/* =====================================================
-   HIDE OPENED PROJECT BAR
-   ===================================================== */
-
-function hideOpenedProjectBar() {
-
-    if (!openedProjectBar) {
-        return;
-    }
-
-    openedProjectBar.classList.remove("show");
-
-}
-
-
-/* =====================================================
-   OPEN SAVED PROJECTS PAGE
-   ===================================================== */
-
-function openSavedProjects() {
-
-    if (!compilerPage || !savedProjectsPage) {
-        return;
-    }
-
-    document.body.classList.add("saved-view");
-
-    compilerPage.style.display = "none";
-
-    savedProjectsPage.classList.add("active");
-
-    /*
-       Render on next frame so the page becomes visible
-       before project cards are created.
-    */
-
-    requestAnimationFrame(function () {
-
-        renderProjects();
-
-    });
-
-    window.scrollTo(0, 0);
-
-}
-
-
-/* =====================================================
-   SAVED PROJECTS BUTTON
-   ===================================================== */
-
-if (savedProjectsBtn) {
-
-    savedProjectsBtn.addEventListener(
-        "click",
-        function () {
-
-            blurButton(this);
-
-            openSavedProjects();
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   BACK TO COMPILER
-   ===================================================== */
-
-if (backToCompilerBtn) {
-
-    backToCompilerBtn.addEventListener(
-        "click",
-        function () {
-
-            blurButton(this);
-
-            restoreHomeCode();
-
-            savedProjectsPage.classList.remove("active");
-
-            document.body.classList.remove("saved-view");
-
-            compilerPage.style.display = "block";
-
-            window.scrollTo(0, 0);
-
-            buildPreview();
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   BACK TO SAVED PROJECTS FROM OPENED PROJECT
-   ===================================================== */
-
-if (backToSavedProjectsFromCompiler) {
-
-    backToSavedProjectsFromCompiler.addEventListener(
-        "click",
-        function () {
-
-            blurButton(this);
-
-            openSavedProjects();
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   RESTORE HOME CODE
-   ===================================================== */
-
-function restoreHomeCode() {
-
-    htmlCode.value =
-        homeCode.html;
-
-    cssCode.value =
-        homeCode.css;
-
-    jsCode.value =
-        homeCode.js;
-
-    projectNameInput.value =
-        "";
-
-    activeProjectId =
-        null;
-
-    hideOpenedProjectBar();
 
 }
 
@@ -1132,410 +1315,261 @@ function restoreHomeCode() {
    RENDER SAVED PROJECTS
    ===================================================== */
 
-function renderProjects() {
+function renderSavedProjects(
+    projects
+) {
 
-    if (!projectsGrid) {
-        return;
-    }
+    projectsGrid.innerHTML =
+        "";
 
-
-    const projects =
-        getProjects();
-
-
-    /*
-       Clear old cards first.
-    */
-
-    projectsGrid.replaceChildren();
-
-
-    /* =================================================
-       EMPTY STATE
-       ================================================= */
 
     if (!projects.length) {
 
-        const empty =
-            document.createElement("div");
+        projectsGrid.innerHTML = `
+            <div class="projects-empty">
 
-        empty.className =
-            "empty-projects";
+                <div class="empty-project-icon">
+                    +
+                </div>
 
+                <h3>
+                    No Saved Projects
+                </h3>
 
-        const wrapper =
-            document.createElement("div");
+                <p>
+                    Your saved Codexa projects will appear here.
+                </p>
 
+                <button
+                    type="button"
+                    class="empty-project-btn"
+                    onclick="createNewProject()"
+                >
+                    Create New Project
+                </button>
 
-        const title =
-            document.createElement("h2");
-
-        title.textContent =
-            "No Saved Projects";
-
-
-        const text =
-            document.createElement("p");
-
-        text.textContent =
-            "Save your first Codexa project and it will appear here.";
-
-
-        wrapper.appendChild(title);
-
-        wrapper.appendChild(text);
-
-        empty.appendChild(wrapper);
-
-        projectsGrid.appendChild(empty);
+            </div>
+        `;
 
         return;
-
     }
 
 
-    /* =================================================
-       CREATE PROJECT CARDS
-       ================================================= */
-
-    const fragment =
-        document.createDocumentFragment();
-
-
     projects.forEach(
-        function (project, index) {
+        (project) => {
 
-            if (!project) {
-                return;
-            }
-
-
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "project-card";
-
-
-            /* ==================== NUMBER ==================== */
-
-            const number =
-                document.createElement("span");
-
-            number.className =
-                "project-number";
-
-            number.textContent =
-                `PROJECT ${String(index + 1).padStart(2, "0")}`;
-
-
-            /* ==================== NAME ==================== */
-
-            const title =
-                document.createElement("h3");
-
-            title.textContent =
-                project.name ||
-                "Untitled Project";
-
-
-            /* ==================== DATE ==================== */
-
-            const dateElement =
-                document.createElement("div");
-
-            dateElement.className =
-                "project-date";
-
-
-            let savedDate =
-                "Unknown";
-
-
-            if (project.savedAt) {
-
-                const parsedDate =
-                    new Date(project.savedAt);
-
-
-                if (
-                    !Number.isNaN(
-                        parsedDate.getTime()
-                    )
-                ) {
-
-                    savedDate =
-                        parsedDate.toLocaleString();
-
-                }
-
-            }
-
-
-            dateElement.textContent =
-                `Saved ${savedDate}`;
-
-
-            /* ==================== ACTIONS ==================== */
-
-            const actions =
-                document.createElement("div");
-
-            actions.className =
-                "project-actions";
-
-
-            const openButton =
-                document.createElement("button");
-
-            openButton.className =
-                "open-project";
-
-            openButton.type =
-                "button";
-
-            openButton.textContent =
-                "Open";
-
-
-            const downloadButton =
-                document.createElement("button");
-
-            downloadButton.className =
-                "download-project";
-
-            downloadButton.type =
-                "button";
-
-            downloadButton.textContent =
-                "Download";
-
-
-            const deleteButton =
-                document.createElement("button");
-
-            deleteButton.className =
-                "delete-project";
-
-            deleteButton.type =
-                "button";
-
-            deleteButton.textContent =
-                "Delete";
-
-
-            /* ==================== OPEN ==================== */
-
-            openButton.addEventListener(
-                "click",
-                function () {
-
-                    blurButton(this);
-
-                    loadProject(
-                        project.id
-                    );
-
-                }
-            );
-
-
-            /* ==================== DOWNLOAD ==================== */
-
-            downloadButton.addEventListener(
-                "click",
-                function () {
-
-                    blurButton(this);
-
-                    downloadProject(
-                        project
-                    );
-
-                }
-            );
-
-
-            /* ==================== DELETE ==================== */
-
-            deleteButton.addEventListener(
-                "click",
-                function () {
-
-                    blurButton(this);
-
-                    askDelete(
-                        project
-                    );
-
-                }
-            );
-
-
-            /* ==================== BUILD CARD ==================== */
-
-            actions.appendChild(
-                openButton
-            );
-
-            actions.appendChild(
-                downloadButton
-            );
-
-            actions.appendChild(
-                deleteButton
-            );
-
-
-            card.appendChild(
-                number
-            );
-
-            card.appendChild(
-                title
-            );
-
-            card.appendChild(
-                dateElement
-            );
-
-            card.appendChild(
-                actions
-            );
-
-
-            fragment.appendChild(
-                card
+            projectsGrid.appendChild(
+                createProjectCard(project)
             );
 
         }
-    );
-
-
-    /*
-       Insert all cards only once.
-       This is much lighter than repeatedly
-       modifying the live DOM.
-    */
-
-    projectsGrid.appendChild(
-        fragment
     );
 
 }
 
 
 /* =====================================================
-   LOAD PROJECT
+   PROJECT CARD
    ===================================================== */
 
-function loadProject(projectId) {
+function createProjectCard(
+    project
+) {
 
-    const projects =
-        getProjects();
+    const card =
+        document.createElement("article");
+
+    card.className =
+        "project-card";
 
 
-    const project =
-        projects.find(
-            function (item) {
+    const name =
+        project.project_name ||
+        "Untitled Project";
 
-                return (
-                    item &&
-                    item.id === projectId
-                );
 
-            }
+    const updated =
+        formatProjectDate(
+            project.updated_at ||
+            project.created_at
         );
 
+
+    card.innerHTML = `
+
+        <div class="project-card-top">
+
+            <div class="project-card-icon">
+                C
+            </div>
+
+            <div class="project-card-info">
+
+                <h3>
+                    ${escapeHtml(name)}
+                </h3>
+
+                <span>
+                    Updated ${escapeHtml(updated)}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="project-card-preview">
+
+            <div class="mini-preview-line long"></div>
+            <div class="mini-preview-line medium"></div>
+            <div class="mini-preview-line short"></div>
+
+        </div>
+
+
+        <div class="project-card-actions">
+
+            <button
+                type="button"
+                class="project-open-btn"
+            >
+                Open
+            </button>
+
+            <button
+                type="button"
+                class="project-download-btn"
+            >
+                ZIP
+            </button>
+
+            <button
+                type="button"
+                class="project-delete-btn"
+            >
+                Delete
+            </button>
+
+        </div>
+
+    `;
+
+
+    card.querySelector(
+        ".project-open-btn"
+    ).addEventListener(
+        "click",
+        () => openSavedProject(project)
+    );
+
+
+    card.querySelector(
+        ".project-download-btn"
+    ).addEventListener(
+        "click",
+        () => downloadSavedProject(project)
+    );
+
+
+    card.querySelector(
+        ".project-delete-btn"
+    ).addEventListener(
+        "click",
+        () => confirmDeleteProject(project)
+    );
+
+
+    return card;
+
+}
+
+
+/* =====================================================
+   OPEN PROJECT
+   ===================================================== */
+
+function openSavedProject(
+    project
+) {
 
     if (!project) {
 
         showToast(
-            "Project Not Found",
-            "This project could not be found.",
-            "!",
-            2500
+            "Project Error",
+            "The selected project could not be opened.",
+            "error"
         );
 
-        renderProjects();
-
         return;
-
     }
-
-
-    htmlCode.value =
-        project.html || "";
-
-
-    cssCode.value =
-        project.css || "";
-
-
-    jsCode.value =
-        project.js || "";
-
-
-    projectNameInput.value =
-        project.name || "";
 
 
     activeProjectId =
         project.id;
 
 
-    savedProjectsPage.classList.remove(
-        "active"
-    );
+    projectNameInput.value =
+        project.project_name || "";
 
 
-    document.body.classList.remove(
-        "saved-view"
-    );
+    htmlCode.value =
+        project.html_code || "";
+
+    cssCode.value =
+        project.css_code || "";
+
+    jsCode.value =
+        project.js_code || "";
 
 
-    compilerPage.style.display =
-        "block";
+    openedProjectBar.style.display =
+        "flex";
 
 
-    showOpenedProjectBar(
-        project.name ||
-        "Untitled Project"
-    );
+    openedProjectText.textContent =
+        "Saved project is currently open: " +
+        (
+            project.project_name ||
+            "Untitled Project"
+        );
 
 
-    window.scrollTo(
-        0,
-        0
-    );
-
+    showCompilerPage();
 
     buildPreview();
 
 
     showToast(
-        "Project Loaded",
-        `"${project.name || "Untitled Project"}" is now open in Codexa.`,
-        "✓",
-        2400
+        "Project Opened",
+        `"${project.project_name || "Untitled Project"}" is now open.`,
+        "success"
     );
 
 }
 
 
 /* =====================================================
-   ASK DELETE
+   DELETE CONFIRMATION
    ===================================================== */
 
-function askDelete(project) {
+function confirmDeleteProject(
+    project
+) {
+
+    if (!project) return;
+
+
+    const projectName =
+        project.project_name ||
+        "Untitled Project";
+
 
     showConfirm(
         "Delete Project",
-        `"${project.name || "Untitled Project"}" will be removed from Saved Projects. This action cannot be undone.`,
-        "Delete",
-        function () {
+        `Are you sure you want to delete "${projectName}"? This action cannot be undone.`,
+        async () => {
 
-            deleteProject(
+            await deleteProject(
                 project.id
             );
 
@@ -1549,420 +1583,91 @@ function askDelete(project) {
    DELETE PROJECT
    ===================================================== */
 
-function deleteProject(projectId) {
+async function deleteProject(
+    projectId
+) {
 
-    const projects =
-        getProjects();
-
-
-    const updated =
-        projects.filter(
-            function (project) {
-
-                return (
-                    project &&
-                    project.id !== projectId
-                );
-
-            }
-        );
-
-
-    if (
-        updated.length ===
-        projects.length
-    ) {
+    if (!currentUser) {
 
         showToast(
-            "Project Not Found",
-            "This project could not be found.",
-            "!",
-            2500
+            "Login Required",
+            "Please login again.",
+            "error"
         );
 
         return;
-
     }
 
 
-    const saved =
-        writeProjects(
-            updated
-        );
-
-
-    if (!saved) {
+    if (!projectId) {
 
         showToast(
             "Delete Failed",
-            "The project could not be deleted.",
-            "!",
-            3000
+            "Invalid project ID.",
+            "error"
         );
 
         return;
-
-    }
-
-
-    if (
-        activeProjectId ===
-        projectId
-    ) {
-
-        activeProjectId =
-            null;
-
-        projectNameInput.value =
-            "";
-
-        hideOpenedProjectBar();
-
-    }
-
-
-    renderProjects();
-
-
-    showToast(
-        "Project Deleted",
-        "The project has been removed successfully.",
-        "✓",
-        2400
-    );
-
-}
-
-
-/* =====================================================
-   DEFAULT PAGE STATE
-   ===================================================== */
-
-if (compilerPage) {
-
-    compilerPage.style.display =
-        "block";
-
-}
-
-
-if (savedProjectsPage) {
-
-    savedProjectsPage.classList.remove(
-        "active"
-    );
-
-}
-
-
-document.body.classList.remove(
-    "saved-view"
-);
-/* =====================================================
-   CODEXA — JAVASCRIPT PART 3/3
-   DOWNLOAD + COPY + FULLSCREEN + FINAL
-   ===================================================== */
-
-
-/* =====================================================
-   DOWNLOAD CURRENT PROJECT
-   ===================================================== */
-
-downloadBtn.addEventListener(
-    "click",
-    function () {
-
-        blurButton(
-            this
-        );
-
-
-        const name =
-            projectNameInput.value.trim();
-
-
-        if (!name) {
-
-            showToast(
-                "Name Required",
-                "Please enter a project name before downloading.",
-                "!",
-                2500
-            );
-
-
-            projectNameInput.focus();
-
-
-            return;
-
-        }
-
-
-        downloadCurrentProject(
-            name
-        );
-
-    }
-);
-
-
-/* =====================================================
-   DOWNLOAD CURRENT PROJECT
-   ===================================================== */
-
-async function downloadCurrentProject(
-    name
-) {
-
-    const cleanName =
-        String(
-            name || ""
-        ).trim();
-
-
-    if (!cleanName) {
-
-        showToast(
-            "Name Required",
-            "Please enter a project name before downloading.",
-            "!",
-            2500
-        );
-
-
-        return;
-
-    }
-
-
-    const project = {
-
-        name:
-            cleanName,
-
-        html:
-            htmlCode.value,
-
-        css:
-            cssCode.value,
-
-        js:
-            jsCode.value
-
-    };
-
-
-    await downloadProject(
-        project
-    );
-
-}
-
-
-/* =====================================================
-   DOWNLOAD SAVED PROJECT
-   ===================================================== */
-
-async function downloadProject(
-    project
-) {
-
-    if (
-        typeof JSZip ===
-        "undefined"
-    ) {
-
-        showToast(
-            "Download Error",
-            "The ZIP library could not be loaded.",
-            "!",
-            3000
-        );
-
-
-        return;
-
     }
 
 
     try {
 
-        const zip =
-            new JSZip();
-
-
-        const title =
-            escapeHTML(
-                project.name ||
-                "Codexa Project"
-            );
-
-
-        const indexHTML =
-`<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>${title}</title>
-
-<link
-    rel="stylesheet"
-    href="style.css"
->
-
-</head>
-
-<body>
-
-${project.html || ""}
-
-<script src="script.js"><\/script>
-
-</body>
-
-</html>`;
-
-
-        zip.file(
-            "index.html",
-            indexHTML
-        );
-
-
-        zip.file(
-            "style.css",
-            project.css || ""
-        );
-
-
-        zip.file(
-            "script.js",
-            project.js || ""
-        );
-
-
-        showToast(
-            "Preparing Download",
-            "Creating your ZIP file...",
-            "↓",
-            0
-        );
-
-
-        const blob =
-            await zip.generateAsync({
-                type: "blob"
-            });
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const link =
-            document.createElement(
-                "a"
-            );
-
-
-        link.href =
-            url;
-
-
-        link.download =
-            sanitizeFileName(
-                project.name
-            ) + ".zip";
-
-
-        link.style.display =
-            "none";
-
-
-        document.body.appendChild(
-            link
-        );
-
-
-        link.click();
-
-
-        link.remove();
-
-
-        setTimeout(
-            function () {
-
-                URL.revokeObjectURL(
-                    url
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("projects")
+                .delete()
+                .eq(
+                    "id",
+                    projectId
+                )
+                .eq(
+                    "user_id",
+                    currentUser.id
                 );
 
-            },
-            1500
-        );
+
+        if (error) {
+            throw error;
+        }
 
 
-        const preparationToasts =
-            document.querySelectorAll(
-                ".toast"
-            );
+        if (
+            activeProjectId ===
+            projectId
+        ) {
 
+            resetCompiler();
 
-        preparationToasts.forEach(
-            function (toast) {
-
-                const titleElement =
-                    toast.querySelector(
-                        ".toast-title"
-                    );
-
-
-                if (
-                    titleElement &&
-                    titleElement.textContent ===
-                    "Preparing Download"
-                ) {
-
-                    toast.remove();
-
-                }
-
-            }
-        );
+        }
 
 
         showToast(
-            "Download Ready",
-            `"${project.name}.zip" is ready.`,
-            "✓",
-            2600
+            "Project Deleted",
+            "The project has been removed from your cloud storage.",
+            "success"
         );
 
 
-    } catch (error) {
+        await loadSavedProjects();
+
+    }
+
+    catch (error) {
 
         console.error(
-            "ZIP error:",
+            "Delete Project Error:",
             error
         );
 
 
         showToast(
-            "Download Failed",
-            "Something went wrong while creating the ZIP file.",
-            "!",
-            3000
+            "Delete Failed",
+            error.message ||
+            "Unable to delete the project.",
+            "error"
         );
 
     }
@@ -1971,31 +1676,134 @@ ${project.html || ""}
 
 
 /* =====================================================
-   SANITIZE FILE NAME
+   CLEAR EDITOR
    ===================================================== */
 
-function sanitizeFileName(
-    name
+function clearEditor() {
+
+    htmlCode.value = "";
+    cssCode.value = "";
+    jsCode.value = "";
+
+
+    buildPreview();
+
+
+    showToast(
+        "Editor Cleared",
+        "All editor code has been cleared.",
+        "success"
+    );
+
+}
+
+
+clearBtn.addEventListener(
+    "click",
+    () => {
+
+        showConfirm(
+            "Clear Editor",
+            "Are you sure you want to clear all HTML, CSS and JavaScript code?",
+            clearEditor
+        );
+
+    }
+);
+
+
+/* =====================================================
+   CREATE NEW PROJECT
+   ===================================================== */
+
+function createNewProject() {
+
+    resetCompiler();
+
+    showCompilerPage();
+
+
+    showToast(
+        "New Project",
+        "A new blank project is ready.",
+        "success"
+    );
+
+}
+
+
+/* =====================================================
+   RESET COMPILER
+   ===================================================== */
+
+function resetCompiler() {
+
+    activeProjectId =
+        null;
+
+
+    projectNameInput.value =
+        "";
+
+    htmlCode.value =
+        "";
+
+    cssCode.value =
+        "";
+
+    jsCode.value =
+        "";
+
+
+    openedProjectBar.style.display =
+        "none";
+
+
+    openedProjectText.textContent =
+        "Saved project is currently open.";
+
+
+    buildPreview();
+
+}
+
+
+/* =====================================================
+   FORMAT DATE
+   ===================================================== */
+
+function formatProjectDate(
+    dateValue
 ) {
 
-    return String(
-        name || ""
-    )
-        .trim()
-        .replace(
-            /[<>:"/\\|?*\x00-\x1F]/g,
-            ""
+    if (!dateValue) {
+        return "Unknown";
+    }
+
+
+    const date =
+        new Date(dateValue);
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
         )
-        .replace(
-            /\s+/g,
-            "-"
-        )
-        .substring(
-            0,
-            80
-        )
-        ||
-        "Codexa-Project";
+    ) {
+        return "Unknown";
+    }
+
+
+    return date.toLocaleString(
+        undefined,
+        {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
 
 }
 
@@ -2004,12 +1812,12 @@ function sanitizeFileName(
    ESCAPE HTML
    ===================================================== */
 
-function escapeHTML(
-    text
+function escapeHtml(
+    value
 ) {
 
     return String(
-        text
+        value ?? ""
     )
         .replace(
             /&/g,
@@ -2036,271 +1844,20 @@ function escapeHTML(
 
 
 /* =====================================================
-   COPY CODE
+   PROJECT NAME ENTER
    ===================================================== */
 
-function copyCode(
-    id
-) {
+projectNameInput.addEventListener(
+    "keydown",
+    (event) => {
 
-    const element =
-        document.getElementById(
-            id
-        );
+        if (
+            event.key === "Enter"
+        ) {
 
+            event.preventDefault();
 
-    if (!element) {
-        return;
-    }
-
-
-    const text =
-        element.value;
-
-
-    if (
-        navigator.clipboard &&
-        typeof navigator.clipboard.writeText ===
-            "function"
-    ) {
-
-        navigator.clipboard
-            .writeText(
-                text
-            )
-            .then(
-                function () {
-
-                    showToast(
-                        "Code Copied",
-                        "The selected code has been copied to your clipboard.",
-                        "✓",
-                        2200
-                    );
-
-                }
-            )
-            .catch(
-                function () {
-
-                    fallbackCopy(
-                        text,
-                        id
-                    );
-
-                }
-            );
-
-
-        return;
-
-    }
-
-
-    fallbackCopy(
-        text,
-        id
-    );
-
-}
-
-
-/* =====================================================
-   FALLBACK COPY
-   ===================================================== */
-
-function fallbackCopy(
-    text,
-    id
-) {
-
-    const temp =
-        document.createElement(
-            "textarea"
-        );
-
-
-    temp.value =
-        text;
-
-
-    temp.setAttribute(
-        "readonly",
-        ""
-    );
-
-
-    temp.style.position =
-        "fixed";
-
-
-    temp.style.top =
-        "0";
-
-
-    temp.style.left =
-        "-9999px";
-
-
-    temp.style.width =
-        "1px";
-
-
-    temp.style.height =
-        "1px";
-
-
-    temp.style.opacity =
-        "0";
-
-
-    document.body.appendChild(
-        temp
-    );
-
-
-    temp.focus();
-
-
-    temp.select();
-
-
-    temp.setSelectionRange(
-        0,
-        temp.value.length
-    );
-
-
-    let success =
-        false;
-
-
-    try {
-
-        success =
-            document.execCommand(
-                "copy"
-            );
-
-    } catch (error) {
-
-        console.error(
-            "Fallback copy error:",
-            error
-        );
-
-    }
-
-
-    temp.remove();
-
-
-    if (success) {
-
-        showToast(
-            "Code Copied",
-            "The selected code has been copied to your clipboard.",
-            "✓",
-            2200
-        );
-
-
-        return;
-
-    }
-
-
-    const original =
-        document.getElementById(
-            id
-        );
-
-
-    if (original) {
-
-        original.focus();
-
-        original.select();
-
-        original.setSelectionRange(
-            0,
-            original.value.length
-        );
-
-    }
-
-
-    showToast(
-        "Select & Copy",
-        "The code has been selected. Use your phone's Copy option.",
-        "!",
-        3000
-    );
-
-}
-
-
-/* =====================================================
-   FULLSCREEN
-   ===================================================== */
-
-fullscreenBtn.addEventListener(
-    "click",
-    async function () {
-
-        blurButton(
-            this
-        );
-
-
-        try {
-
-            if (
-                document.fullscreenElement
-            ) {
-
-                await document.exitFullscreen();
-
-                return;
-
-            }
-
-
-            if (
-                preview &&
-                typeof preview.requestFullscreen ===
-                    "function"
-            ) {
-
-                await preview.requestFullscreen();
-
-                return;
-
-            }
-
-
-            showToast(
-                "Fullscreen Unavailable",
-                "Fullscreen is not supported by this browser.",
-                "!",
-                2600
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Fullscreen error:",
-                error
-            );
-
-
-            showToast(
-                "Fullscreen Error",
-                "Fullscreen mode could not be opened.",
-                "!",
-                2600
-            );
+            saveCurrentProject();
 
         }
 
@@ -2309,12 +1866,658 @@ fullscreenBtn.addEventListener(
 
 
 /* =====================================================
-   FULLSCREEN STATE
+   AUTH ENTER
+   ===================================================== */
+
+loginPassword.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            loginUser();
+
+        }
+
+    }
+);
+
+
+signupPasswordConfirm.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            signupUser();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   AUTH EVENTS
+   ===================================================== */
+
+loginBtn.addEventListener(
+    "click",
+    loginUser
+);
+
+
+signupBtn.addEventListener(
+    "click",
+    signupUser
+);
+
+
+showSignupBtn.addEventListener(
+    "click",
+    showSignupForm
+);
+
+
+showLoginBtn.addEventListener(
+    "click",
+    showLoginForm
+);
+
+
+logoutBtn.addEventListener(
+    "click",
+    () => {
+
+        showConfirm(
+            "Logout",
+            "Are you sure you want to logout from Codexa?",
+            logoutUser
+        );
+
+    }
+);
+
+
+/* =====================================================
+   APP EVENTS
+   ===================================================== */
+
+runBtn.addEventListener(
+    "click",
+    runProject
+);
+
+
+saveBtn.addEventListener(
+    "click",
+    saveCurrentProject
+);
+
+
+savedProjectsBtn.addEventListener(
+    "click",
+    showSavedProjects
+);
+
+
+backToSavedProjectsFromCompiler.addEventListener(
+    "click",
+    showSavedProjects
+);
+
+
+backToCompilerBtn.addEventListener(
+    "click",
+    showCompilerPage
+);
+/* =====================================================
+   CODEXA — JAVASCRIPT PART 3/3
+   DOWNLOAD + COPY + FULLSCREEN + INIT
+   ===================================================== */
+
+
+/* =====================================================
+   SANITIZE FILE NAME
+   ===================================================== */
+
+function sanitizeFilename(
+    name
+) {
+
+    return String(
+        name || "codexa-project"
+    )
+        .trim()
+        .replace(
+            /[<>:"/\\|?*\x00-\x1F]/g,
+            ""
+        )
+        .replace(
+            /\s+/g,
+            "-"
+        )
+        .replace(
+            /-+/g,
+            "-"
+        )
+        .replace(
+            /^[-.]+|[-.]+$/g,
+            ""
+        )
+        .slice(
+            0,
+            80
+        )
+        ||
+        "codexa-project";
+
+}
+
+
+/* =====================================================
+   CREATE ZIP
+   ===================================================== */
+
+async function createProjectZip(
+    project
+) {
+
+    if (
+        typeof JSZip ===
+        "undefined"
+    ) {
+
+        throw new Error(
+            "JSZip library is not available."
+        );
+
+    }
+
+
+    const zip =
+        new JSZip();
+
+
+    const projectName =
+        project.project_name ||
+        "codexa-project";
+
+
+    const folder =
+        zip.folder(
+            sanitizeFilename(projectName)
+        );
+
+
+    folder.file(
+        "index.html",
+        project.html_code || ""
+    );
+
+
+    folder.file(
+        "style.css",
+        project.css_code || ""
+    );
+
+
+    folder.file(
+        "script.js",
+        project.js_code || ""
+    );
+
+
+    folder.file(
+        "README.txt",
+        `Codexa Project
+================
+
+Project: ${projectName}
+
+Files:
+- index.html
+- style.css
+- script.js
+
+Created with Codexa — Build • Run • Create
+`
+    );
+
+
+    return await zip.generateAsync({
+        type: "blob"
+    });
+
+}
+
+
+/* =====================================================
+   DOWNLOAD CURRENT PROJECT
+   ===================================================== */
+
+async function downloadCurrentProject() {
+
+    const projectName =
+        projectNameInput.value.trim();
+
+
+    if (!projectName) {
+
+        showToast(
+            "Project Name Required",
+            "Please enter a project name before downloading.",
+            "error"
+        );
+
+        projectNameInput.focus();
+
+        return;
+    }
+
+
+    const project = {
+
+        project_name:
+            projectName,
+
+        html_code:
+            htmlCode.value,
+
+        css_code:
+            cssCode.value,
+
+        js_code:
+            jsCode.value
+
+    };
+
+
+    downloadBtn.disabled =
+        true;
+
+    downloadBtn.textContent =
+        "Creating ZIP...";
+
+
+    try {
+
+        const blob =
+            await createProjectZip(
+                project
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            sanitizeFilename(
+                projectName
+            ) + ".zip";
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+        link.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
+            1000
+        );
+
+
+        showToast(
+            "ZIP Downloaded",
+            `"${projectName}" has been packaged successfully.`,
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Download Error:",
+            error
+        );
+
+
+        showToast(
+            "Download Failed",
+            error.message ||
+            "Unable to create the ZIP file.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        downloadBtn.disabled =
+            false;
+
+        downloadBtn.textContent =
+            "Download ZIP";
+
+    }
+
+}
+
+
+/* =====================================================
+   DOWNLOAD SAVED PROJECT
+   ===================================================== */
+
+async function downloadSavedProject(
+    project
+) {
+
+    if (!project) {
+
+        showToast(
+            "Download Failed",
+            "Project data is unavailable.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const blob =
+            await createProjectZip(
+                project
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement("a");
+
+
+        link.href =
+            url;
+
+
+        link.download =
+            sanitizeFilename(
+                project.project_name ||
+                "codexa-project"
+            ) + ".zip";
+
+
+        document.body.appendChild(
+            link
+        );
+
+
+        link.click();
+
+        link.remove();
+
+
+        setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+            },
+            1000
+        );
+
+
+        showToast(
+            "ZIP Downloaded",
+            `"${project.project_name || "Project"}" has been downloaded.`,
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Saved Project Download Error:",
+            error
+        );
+
+
+        showToast(
+            "Download Failed",
+            error.message ||
+            "Unable to create the ZIP file.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DOWNLOAD BUTTON
+   ===================================================== */
+
+downloadBtn.addEventListener(
+    "click",
+    downloadCurrentProject
+);
+
+
+/* =====================================================
+   COPY CODE
+   ===================================================== */
+
+async function copyCode(
+    targetId
+) {
+
+    const target =
+        document.getElementById(
+            targetId
+        );
+
+
+    if (!target) {
+
+        showToast(
+            "Copy Failed",
+            "Code editor could not be found.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const code =
+        target.value || "";
+
+
+    if (!code) {
+
+        showToast(
+            "Nothing to Copy",
+            "This editor is currently empty.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            await navigator.clipboard.writeText(
+                code
+            );
+
+        }
+
+        else {
+
+            target.focus();
+
+            target.select();
+
+            document.execCommand(
+                "copy"
+            );
+
+            target.setSelectionRange(
+                0,
+                0
+            );
+
+        }
+
+
+        showToast(
+            "Copied",
+            "Code copied to your clipboard.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Copy Error:",
+            error
+        );
+
+
+        showToast(
+            "Copy Failed",
+            "Unable to copy the code.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   FULLSCREEN
+   ===================================================== */
+
+async function toggleFullscreen() {
+
+    if (!preview) return;
+
+
+    try {
+
+        if (
+            document.fullscreenElement
+        ) {
+
+            await document.exitFullscreen();
+
+            return;
+        }
+
+
+        if (
+            preview.requestFullscreen
+        ) {
+
+            await preview.requestFullscreen();
+
+        }
+
+        else {
+
+            showToast(
+                "Fullscreen Unavailable",
+                "Fullscreen is not supported by this browser.",
+                "error"
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Fullscreen Error:",
+            error
+        );
+
+
+        showToast(
+            "Fullscreen Failed",
+            "Unable to open the preview in fullscreen.",
+            "error"
+        );
+
+    }
+
+}
+
+
+fullscreenBtn.addEventListener(
+    "click",
+    toggleFullscreen
+);
+
+
+/* =====================================================
+   FULLSCREEN TEXT
    ===================================================== */
 
 document.addEventListener(
     "fullscreenchange",
-    function () {
+    () => {
 
         fullscreenBtn.textContent =
             document.fullscreenElement
@@ -2326,135 +2529,117 @@ document.addEventListener(
 
 
 /* =====================================================
-   INITIALIZE CODEXA
+   GITHUB
    ===================================================== */
 
-function initializeCodexa() {
-
-    compilerPage.style.display =
-        "block";
-
-
-    savedProjectsPage.classList.remove(
-        "active"
+const githubBtn =
+    document.getElementById(
+        "githubBtn"
     );
 
 
-    document.body.classList.remove(
-        "saved-view"
+if (githubBtn) {
+
+    githubBtn.addEventListener(
+        "click",
+        () => {
+
+            /*
+             * The HTML anchor handles
+             * the GitHub navigation.
+             */
+
+        }
     );
-
-
-    hideOpenedProjectBar();
-
-
-    buildPreview();
 
 }
 
 
 /* =====================================================
-   PAGE LOAD
+   INITIALIZATION
    ===================================================== */
 
-if (
-    document.readyState ===
-    "loading"
-) {
+async function initializeCodexa() {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeCodexa,
-        {
-            once: true
-        }
-    );
+    try {
 
-} else {
-
-    initializeCodexa();
-
-}
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.getSession();
 
 
-/* =====================================================
-   MOBILE BUTTON STATE FIX
-   ===================================================== */
+        if (error) {
 
-document.addEventListener(
-    "pointerup",
-    function (event) {
-
-        const target =
-            event.target.closest(
-                "button, .github-btn"
+            console.error(
+                "Session Error:",
+                error
             );
 
+            showAuthPage();
 
-        if (target) {
-
-            setTimeout(
-                function () {
-
-                    blurButton(
-                        target
-                    );
-
-                },
-                0
-            );
-
+            return;
         }
 
-    },
-    {
-        passive: true
-    }
-);
-
-
-document.addEventListener(
-    "pointercancel",
-    function (event) {
-
-        const target =
-            event.target.closest(
-                "button, .github-btn"
-            );
-
-
-        if (target) {
-
-            blurButton(
-                target
-            );
-
-        }
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =====================================================
-   PROJECT NAME — ENTER TO SAVE
-   ===================================================== */
-
-projectNameInput.addEventListener(
-    "keydown",
-    function (event) {
 
         if (
-            event.key === "Enter"
+            data &&
+            data.session
         ) {
 
-            event.preventDefault();
+            currentSession =
+                data.session;
 
-            saveBtn.click();
+            currentUser =
+                data.session.user;
+
+
+            showApp();
+
+            showCompilerPage();
+
+        }
+
+        else {
+
+            currentSession =
+                null;
+
+            currentUser =
+                null;
+
+
+            showAuthPage();
 
         }
 
     }
-);
+
+    catch (error) {
+
+        console.error(
+            "Initialization Error:",
+            error
+        );
+
+
+        showAuthPage();
+
+    }
+
+}
+
+
+/* =====================================================
+   INITIAL PREVIEW
+   ===================================================== */
+
+buildPreview();
+
+
+/* =====================================================
+   START CODEXA
+   ===================================================== */
+
+initializeCodexa();
