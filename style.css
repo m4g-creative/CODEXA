@@ -1,0 +1,2924 @@
+/* =====================================================
+   CODEXA — STYLE.CSS PART 1/3
+   ORIGINAL DARK GLASS + PURPLE / PINK / CYAN THEME
+   ===================================================== */
+
+:root {
+
+    --bg: #070812;
+
+    --card: rgba(20, 22, 45, 0.88);
+
+    --purple: #8b5cf6;
+
+    --pink: #ec4899;
+
+    --cyan: #22d3ee;
+
+    --blue: #3b82f6;
+
+    --yellow: #facc15;
+
+    --text: #ffffff;
+
+    --muted: #a8aec7;
+
+    --border: rgba(255, 255, 255, 0.10);
+
+}
+
+
+/* =====================================================
+   RESET
+   ===================================================== */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    color: var(--text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(139, 92, 246, 0.12),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(34, 211, 238, 0.10),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(236, 72, 153, 0.08),
+            transparent 35%
+        ),
+
+        var(--bg);
+
+    overflow-x: hidden;
+
+}
+
+
+/* =====================================================
+   BUTTON BASE
+   ===================================================== */
+
+button {
+
+    position: relative;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    outline: none;
+
+    color: var(--text);
+
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    padding:
+        10px
+        14px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    -webkit-touch-callout:
+        none;
+
+    touch-action:
+        manipulation;
+
+}
+
+
+button:active {
+
+    transform:
+        translateY(0)
+        scale(0.97);
+
+}
+
+
+button:focus {
+
+    outline: none;
+
+}
+
+
+button:focus-visible {
+
+    outline:
+        2px solid
+        rgba(34, 211, 238, 0.45);
+
+    outline-offset:
+        2px;
+
+}
+
+
+/*
+   Hover is intentionally limited to real
+   mouse / trackpad devices.
+   This prevents mobile buttons from
+   staying in the hover position after touch.
+*/
+
+@media (hover: hover) and (pointer: fine) {
+
+    button:hover {
+
+        transform:
+            translateY(-2px);
+
+        border-color:
+            rgba(255, 255, 255, 0.20);
+
+        background:
+            rgba(255, 255, 255, 0.09);
+
+    }
+
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    width: 100%;
+
+    min-height: 72px;
+
+    padding:
+        14px
+        28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    background:
+        rgba(7, 8, 18, 0.82);
+
+    border-bottom:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+}
+
+
+/* =====================================================
+   LOGO
+   ===================================================== */
+
+.logo {
+
+    font-size: 27px;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    white-space: nowrap;
+
+}
+
+
+.logo span {
+
+    color:
+        var(--cyan);
+
+}
+
+
+/* =====================================================
+   ACTIONS
+   ===================================================== */
+
+.actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    min-width: 0;
+
+}
+
+
+/* =====================================================
+   NAV BUTTON
+   ===================================================== */
+
+.nav-btn {
+
+    background:
+        rgba(139, 92, 246, 0.10);
+
+    border-color:
+        rgba(139, 92, 246, 0.30);
+
+}
+
+
+/* =====================================================
+   SAVE BUTTON
+   ===================================================== */
+
+.save-btn {
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--pink)
+        );
+
+    border-color:
+        rgba(255, 255, 255, 0.15);
+
+    box-shadow:
+        0 8px 30px
+        rgba(139, 92, 246, 0.20);
+
+}
+
+
+.save-btn::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 70%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.22),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left 0.55s ease;
+
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+    .save-btn:hover::after {
+
+        left: 140%;
+
+    }
+
+}
+
+
+/* =====================================================
+   RUN BUTTON
+   ===================================================== */
+
+.run-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan),
+            var(--blue)
+        );
+
+    border-color:
+        rgba(34, 211, 238, 0.30);
+
+    color:
+        #061018;
+
+    box-shadow:
+        0 8px 30px
+        rgba(34, 211, 238, 0.16);
+
+}
+
+
+/* =====================================================
+   GITHUB BUTTON
+   ===================================================== */
+
+.github-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        10px
+        14px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    border-radius:
+        10px;
+
+    color:
+        var(--text);
+
+    background:
+        rgba(255,255,255,0.055);
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
+    touch-action:
+        manipulation;
+
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+    .github-btn:hover {
+
+        transform:
+            translateY(-2px);
+
+        border-color:
+            rgba(255,255,255,0.20);
+
+        background:
+            rgba(255,255,255,0.09);
+
+    }
+
+}
+
+
+.github-btn:active {
+
+    transform:
+        translateY(0)
+        scale(0.97);
+
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+   ===================================================== */
+
+.container {
+
+    width: min(
+        1400px,
+        calc(100% - 40px)
+    );
+
+    margin:
+        0 auto;
+
+    padding:
+        28px
+        0
+        80px;
+
+}
+
+
+/* =====================================================
+   COMPILER PAGE
+   ===================================================== */
+
+.compiler-page {
+
+    width:
+        100%;
+
+}
+
+
+/* =====================================================
+   PROJECT NAME CARD
+   ===================================================== */
+
+.project-name-card {
+
+    position: relative;
+
+    width:
+        100%;
+
+    margin-bottom:
+        22px;
+
+    padding:
+        19px
+        21px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        25px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        16px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 18px 55px
+        rgba(0,0,0,0.22);
+
+    animation:
+        cardIn 0.45s ease both;
+
+}
+
+
+.project-name-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        -90px;
+
+    right:
+        -50px;
+
+    width:
+        180px;
+
+    height:
+        180px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(139,92,246,0.10);
+
+    filter:
+        blur(25px);
+
+    pointer-events:
+        none;
+
+}
+
+
+.project-name-info {
+
+    position:
+        relative;
+
+    min-width:
+        0;
+
+}
+
+
+.project-name-label {
+
+    display:
+        block;
+
+    margin-bottom:
+        6px;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.7px;
+
+}
+
+
+.project-name-info h2 {
+
+    margin-bottom:
+        5px;
+
+    font-size:
+        20px;
+
+}
+
+
+.project-name-info p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* =====================================================
+   PROJECT NAME INPUT
+   ===================================================== */
+
+.project-name-input-wrap {
+
+    position:
+        relative;
+
+    width:
+        min(
+            430px,
+            100%
+        );
+
+    flex-shrink:
+        0;
+
+}
+
+
+#projectNameInput {
+
+    width:
+        100%;
+
+    padding:
+        12px
+        14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+    outline:
+        none;
+
+    color:
+        var(--text);
+
+    background:
+        rgba(5,6,15,0.80);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:
+        14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+#projectNameInput::placeholder {
+
+    color:
+        rgba(168,174,199,0.55);
+
+}
+
+
+#projectNameInput:focus {
+
+    border-color:
+        rgba(139,92,246,0.65);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(139,92,246,0.10);
+
+}
+
+
+/* =====================================================
+   OPENED PROJECT BAR
+   ===================================================== */
+
+.opened-project-bar {
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    margin-bottom:
+        18px;
+
+    padding:
+        11px
+        13px;
+
+    border:
+        1px solid
+        rgba(34,211,238,0.16);
+
+    border-radius:
+        13px;
+
+    background:
+        rgba(34,211,238,0.045);
+
+}
+
+
+.opened-project-bar.show {
+
+    display:
+        flex;
+
+}
+
+
+.opened-project-bar span {
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+}
+
+
+#backToSavedProjectsFromCompiler {
+
+    padding:
+        8px
+        11px;
+
+    font-size:
+        11px;
+
+    border-color:
+        rgba(34,211,238,0.25);
+
+}
+
+
+/* =====================================================
+   PREVIEW CARD
+   ===================================================== */
+
+.preview-card {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        18px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 20px 70px
+        rgba(0, 0, 0, 0.30);
+
+    animation:
+        cardIn 0.55s ease both;
+
+}
+
+
+.preview-header {
+
+    min-height:
+        52px;
+
+    padding:
+        12px
+        16px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255,255,255,0.025);
+
+}
+
+
+.preview-header span {
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.3px;
+
+}
+
+
+.preview-header button {
+
+    padding:
+        7px
+        12px;
+
+    font-size:
+        12px;
+
+}
+
+
+#preview {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        390px;
+
+    border:
+        0;
+
+    background:
+        #ffffff;
+
+}
+
+
+/* =====================================================
+   EDITORS
+   ===================================================== */
+
+.editors {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        18px;
+
+    margin-top:
+        22px;
+
+}
+
+
+.editor {
+
+    min-width:
+        0;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        16px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 18px 50px
+        rgba(0,0,0,0.24);
+
+    animation:
+        editorIn 0.6s ease both;
+
+}
+
+
+.html-editor {
+
+    animation-delay:
+        0.05s;
+
+}
+
+
+.css-editor {
+
+    animation-delay:
+        0.10s;
+
+}
+
+
+.js-editor {
+
+    animation-delay:
+        0.15s;
+
+}
+
+
+/* =====================================================
+   EDITOR HEADER
+   ===================================================== */
+
+.editor-header {
+
+    min-height:
+        48px;
+
+    padding:
+        10px
+        13px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(255,255,255,0.025);
+
+}
+
+
+.editor-header span {
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.editor-header button {
+
+    padding:
+        6px
+        10px;
+
+    font-size:
+        11px;
+
+}
+
+
+/* =====================================================
+   TEXTAREA
+   ===================================================== */
+
+.editor textarea {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    min-height:
+        340px;
+
+    padding:
+        16px;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    resize:
+        vertical;
+
+    color:
+        #e9e9f4;
+
+    background:
+        rgba(4,5,13,0.72);
+
+    font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.65;
+
+    tab-size:
+        4;
+
+}
+
+
+.editor textarea::selection {
+
+    background:
+        rgba(139,92,246,0.35);
+
+}
+/* =====================================================
+   CODEXA — STYLE.CSS PART 2/3
+   SAVED PROJECTS + FOOTER + TOAST + CONFIRMATION
+   ===================================================== */
+
+
+/* =====================================================
+   SAVED PROJECTS PAGE
+   ===================================================== */
+
+.saved-page {
+
+    display:
+        none;
+
+    animation:
+        pageIn 0.45s ease both;
+
+}
+
+
+.saved-page.active {
+
+    display:
+        block;
+
+}
+
+
+/*
+   Hide compiler header actions while
+   Saved Projects page is open.
+*/
+
+body.saved-view .actions {
+
+    display:
+        none;
+
+}
+
+
+/* =====================================================
+   SAVED TOP
+   ===================================================== */
+
+.saved-top {
+
+    display:
+        flex;
+
+    align-items:
+        flex-end;
+
+    justify-content:
+        space-between;
+
+    gap:
+        25px;
+
+    margin-bottom:
+        28px;
+
+}
+
+
+.section-label {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        9px;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        11px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.saved-top h1 {
+
+    font-size:
+        clamp(
+            30px,
+            5vw,
+            52px
+        );
+
+    line-height:
+        1;
+
+    margin-bottom:
+        12px;
+
+}
+
+
+.saved-top p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        14px;
+
+}
+
+
+#backToCompilerBtn {
+
+    flex-shrink:
+        0;
+
+}
+
+
+/* =====================================================
+   PROJECT GRID
+   ===================================================== */
+
+.projects-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        18px;
+
+}
+
+
+/* =====================================================
+   PROJECT CARD
+   ===================================================== */
+
+.project-card {
+
+    position:
+        relative;
+
+    min-width:
+        0;
+
+    padding:
+        21px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        16px;
+
+    background:
+        var(--card);
+
+    box-shadow:
+        0 18px 55px
+        rgba(0,0,0,0.24);
+
+    animation:
+        projectIn 0.5s ease both;
+
+}
+
+
+.project-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        -60px;
+
+    right:
+        -60px;
+
+    width:
+        130px;
+
+    height:
+        130px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(139,92,246,0.10);
+
+    filter:
+        blur(10px);
+
+    pointer-events:
+        none;
+
+}
+
+
+.project-number {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        14px;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.5px;
+
+}
+
+
+.project-card h3 {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    margin-bottom:
+        10px;
+
+    font-size:
+        19px;
+
+    word-break:
+        break-word;
+
+}
+
+
+.project-date {
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* =====================================================
+   PROJECT ACTIONS
+   ===================================================== */
+
+.project-actions {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+    margin-top:
+        20px;
+
+}
+
+
+.project-actions button {
+
+    flex:
+        1;
+
+    min-width:
+        70px;
+
+    padding:
+        8px
+        10px;
+
+    font-size:
+        11px;
+
+}
+
+
+.open-project {
+
+    border-color:
+        rgba(34,211,238,0.25);
+
+}
+
+
+.download-project {
+
+    border-color:
+        rgba(139,92,246,0.25);
+
+}
+
+
+.delete-project {
+
+    border-color:
+        rgba(236,72,153,0.25);
+
+}
+
+
+/* =====================================================
+   EMPTY PROJECTS
+   ===================================================== */
+
+.empty-projects {
+
+    grid-column:
+        1 / -1;
+
+    min-height:
+        260px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    text-align:
+        center;
+
+    padding:
+        35px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        18px;
+
+    background:
+        var(--card);
+
+}
+
+
+.empty-projects h2 {
+
+    margin-bottom:
+        10px;
+
+    font-size:
+        22px;
+
+}
+
+
+.empty-projects p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+}
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.codexa-footer {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        9px;
+
+    padding:
+        25px
+        20px
+        35px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+}
+
+
+.codexa-footer span:first-child {
+
+    color:
+        var(--text);
+
+    font-weight:
+        800;
+
+}
+
+
+/* =====================================================
+   TOAST CONTAINER
+   ===================================================== */
+
+.toast-container {
+
+    position:
+        fixed;
+
+    left:
+        50%;
+
+    bottom:
+        24px;
+
+    z-index:
+        5000;
+
+    width:
+        min(
+            430px,
+            calc(100% - 30px)
+        );
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    transform:
+        translateX(-50%);
+
+    pointer-events:
+        none;
+
+}
+
+
+/* =====================================================
+   TOAST
+   ===================================================== */
+
+.toast {
+
+    position:
+        relative;
+
+    width:
+        100%;
+
+    padding:
+        13px
+        16px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    border-radius:
+        13px;
+
+    background:
+        rgba(20,22,45,0.94);
+
+    box-shadow:
+        0 18px 55px
+        rgba(0,0,0,0.45);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    pointer-events:
+        auto;
+
+    animation:
+        toastIn 0.35s ease both;
+
+}
+
+
+.toast::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        0;
+
+    width:
+        3px;
+
+    height:
+        100%;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--cyan),
+            var(--purple),
+            var(--pink)
+        );
+
+}
+
+
+.toast-icon {
+
+    flex-shrink:
+        0;
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    color:
+        #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--pink)
+        );
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+}
+
+
+.toast-content {
+
+    min-width:
+        0;
+
+    flex:
+        1;
+
+}
+
+
+.toast-title {
+
+    margin-bottom:
+        2px;
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+
+}
+
+
+.toast-message {
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.45;
+
+    word-break:
+        break-word;
+
+}
+
+
+.toast-close {
+
+    flex-shrink:
+        0;
+
+    width:
+        27px;
+
+    height:
+        27px;
+
+    padding:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.08);
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    font-size:
+        15px;
+
+    line-height:
+        1;
+
+}
+
+
+/* =====================================================
+   TOAST HOVER
+   ===================================================== */
+
+@media (hover: hover) and (pointer: fine) {
+
+    .toast-close:hover {
+
+        background:
+            rgba(255,255,255,0.10);
+
+    }
+
+}
+
+
+/* =====================================================
+   TOAST REMOVING
+   ===================================================== */
+
+.toast.removing {
+
+    animation:
+        toastOut 0.25s ease both;
+
+}
+
+
+/* =====================================================
+   CONFIRMATION OVERLAY
+   ===================================================== */
+
+.confirm-overlay {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        10000;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    background:
+        rgba(3,4,12,0.72);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    pointer-events:
+        none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+
+}
+
+
+.confirm-overlay.active {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+    pointer-events:
+        auto;
+
+}
+
+
+/* =====================================================
+   CONFIRM BOX
+   ===================================================== */
+
+.confirm-box {
+
+    position:
+        relative;
+
+    width:
+        min(
+            430px,
+            100%
+        );
+
+    padding:
+        30px;
+
+    overflow:
+        hidden;
+
+    text-align:
+        center;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(20,22,45,0.96);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,0.55);
+
+    transform:
+        translateY(15px)
+        scale(0.96);
+
+    transition:
+        transform 0.25s ease;
+
+}
+
+
+.confirm-overlay.active .confirm-box {
+
+    transform:
+        translateY(0)
+        scale(1);
+
+}
+
+
+.confirm-glow {
+
+    position:
+        absolute;
+
+    top:
+        -100px;
+
+    left:
+        50%;
+
+    width:
+        230px;
+
+    height:
+        230px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(236,72,153,0.12);
+
+    filter:
+        blur(35px);
+
+    pointer-events:
+        none;
+
+}
+
+
+.confirm-icon {
+
+    position:
+        relative;
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    margin:
+        0 auto
+        16px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        rgba(236,72,153,0.35);
+
+    border-radius:
+        50%;
+
+    color:
+        #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--pink)
+        );
+
+    font-size:
+        21px;
+
+    font-weight:
+        800;
+
+    box-shadow:
+        0 10px 35px
+        rgba(236,72,153,0.18);
+
+}
+
+
+.confirm-box h2 {
+
+    position:
+        relative;
+
+    margin-bottom:
+        9px;
+
+    font-size:
+        21px;
+
+}
+
+
+.confirm-box p {
+
+    position:
+        relative;
+
+    margin:
+        0 auto;
+
+    max-width:
+        350px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.55;
+
+}
+
+
+.confirm-buttons {
+
+    position:
+        relative;
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+    margin-top:
+        24px;
+
+}
+
+
+.confirm-buttons button {
+
+    flex:
+        1;
+
+}
+
+
+.confirm-danger {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--purple),
+            var(--pink)
+        );
+
+    border-color:
+        rgba(255,255,255,0.15);
+
+}
+/* =====================================================
+   CODEXA — STYLE.CSS PART 3/3
+   ANIMATIONS + RESPONSIVE
+   ===================================================== */
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes toastIn {
+
+    0% {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(0.96);
+
+    }
+
+    70% {
+
+        opacity: 1;
+
+        transform:
+            translateY(-2px)
+            scale(1.01);
+
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+@keyframes toastOut {
+
+    from {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+    to {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px)
+            scale(0.96);
+
+    }
+
+}
+
+
+@keyframes cardIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+@keyframes editorIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+@keyframes pageIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+@keyframes projectIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(0.98);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/* =====================================================
+   TABLET
+   ===================================================== */
+
+@media (max-width: 1050px) {
+
+    .editors {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+
+    .js-editor {
+
+        grid-column:
+            1 / -1;
+
+    }
+
+
+    .projects-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 720px) {
+
+    .header {
+
+        padding:
+            12px
+            15px;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .logo {
+
+        font-size:
+            23px;
+
+        padding-top:
+            5px;
+
+    }
+
+
+    .actions {
+
+        gap:
+            6px;
+
+        max-width:
+            72%;
+
+    }
+
+
+    .actions button,
+    .github-btn {
+
+        padding:
+            8px
+            10px;
+
+        font-size:
+            11px;
+
+        border-radius:
+            8px;
+
+    }
+
+
+    .container {
+
+        width:
+            calc(100% - 24px);
+
+        padding-top:
+            18px;
+
+        padding-bottom:
+            55px;
+
+    }
+
+
+    /* ==================== PROJECT NAME ==================== */
+
+    .project-name-card {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+        gap:
+            15px;
+
+        padding:
+            17px;
+
+    }
+
+
+    .project-name-input-wrap {
+
+        width:
+            100%;
+
+    }
+
+
+    #projectNameInput {
+
+        padding:
+            11px
+            12px;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .project-name-info h2 {
+
+        font-size:
+            18px;
+
+    }
+
+
+    .project-name-info p {
+
+        font-size:
+            11px;
+
+    }
+
+
+    /* ==================== OPENED PROJECT ==================== */
+
+    .opened-project-bar {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            9px;
+
+        padding:
+            10px;
+
+    }
+
+
+    #backToSavedProjectsFromCompiler {
+
+        width:
+            100%;
+
+    }
+
+
+    .opened-project-bar span {
+
+        padding:
+            0
+            2px;
+
+    }
+
+
+    /* ==================== PREVIEW ==================== */
+
+    #preview {
+
+        height:
+            300px;
+
+    }
+
+
+    /* ==================== EDITORS ==================== */
+
+    .editors {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            14px;
+
+    }
+
+
+    .js-editor {
+
+        grid-column:
+            auto;
+
+    }
+
+
+    .editor textarea {
+
+        min-height:
+            280px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    /* ==================== SAVED PROJECTS ==================== */
+
+    .saved-top {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .saved-top h1 {
+
+        font-size:
+            34px;
+
+    }
+
+
+    .projects-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    /* ==================== TOAST ==================== */
+
+    .toast-container {
+
+        bottom:
+            16px;
+
+        width:
+            calc(100% - 24px);
+
+    }
+
+
+    .toast {
+
+        padding:
+            12px
+            14px;
+
+    }
+
+
+    /* ==================== CONFIRM ==================== */
+
+    .confirm-box {
+
+        padding:
+            25px
+            20px;
+
+        border-radius:
+            18px;
+
+    }
+
+
+    .confirm-box h2 {
+
+        font-size:
+            19px;
+
+    }
+
+
+    .confirm-box p {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .confirm-buttons {
+
+        gap:
+            8px;
+
+    }
+
+
+    .confirm-buttons button {
+
+        padding:
+            10px
+            11px;
+
+        font-size:
+            12px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 430px) {
+
+    .header {
+
+        padding:
+            10px
+            10px;
+
+        gap:
+            8px;
+
+    }
+
+
+    .logo {
+
+        font-size:
+            21px;
+
+        padding-top:
+            4px;
+
+    }
+
+
+    .actions {
+
+        max-width:
+            76%;
+
+        gap:
+            5px;
+
+    }
+
+
+    .actions button,
+    .github-btn {
+
+        padding:
+            7px
+            8px;
+
+        font-size:
+            10px;
+
+        border-radius:
+            8px;
+
+    }
+
+
+    .container {
+
+        width:
+            calc(100% - 20px);
+
+    }
+
+
+    .project-name-card {
+
+        padding:
+            15px;
+
+        border-radius:
+            14px;
+
+    }
+
+
+    .project-name-label {
+
+        font-size:
+            9px;
+
+    }
+
+
+    .project-name-info h2 {
+
+        font-size:
+            17px;
+
+    }
+
+
+    #projectNameInput {
+
+        padding:
+            10px
+            11px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    .preview-header {
+
+        padding:
+            10px
+            12px;
+
+    }
+
+
+    .preview-header span {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .preview-header button {
+
+        padding:
+            7px
+            9px;
+
+        font-size:
+            10px;
+
+    }
+
+
+    .editor-header {
+
+        padding:
+            9px
+            11px;
+
+    }
+
+
+    .editor textarea {
+
+        padding:
+            13px;
+
+        min-height:
+            260px;
+
+        font-size:
+            11px;
+
+    }
+
+
+    .project-card {
+
+        padding:
+            18px;
+
+    }
+
+
+    .project-actions {
+
+        gap:
+            6px;
+
+    }
+
+
+    .project-actions button {
+
+        min-width:
+            65px;
+
+        padding:
+            8px
+            8px;
+
+        font-size:
+            10px;
+
+    }
+
+
+    .toast {
+
+        gap:
+            9px;
+
+        padding:
+            11px
+            12px;
+
+    }
+
+
+    .toast-icon {
+
+        width:
+            28px;
+
+        height:
+            28px;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .toast-title {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .toast-message {
+
+        font-size:
+            10px;
+
+    }
+
+
+    .confirm-overlay {
+
+        padding:
+            14px;
+
+    }
+
+
+    .confirm-box {
+
+        padding:
+            23px
+            16px;
+
+    }
+
+
+    .confirm-icon {
+
+        width:
+            44px;
+
+        height:
+            44px;
+
+        font-size:
+            19px;
+
+    }
+
+
+    .confirm-box h2 {
+
+        font-size:
+            18px;
+
+    }
+
+
+    .confirm-buttons {
+
+        flex-direction:
+            column;
+
+    }
+
+}
